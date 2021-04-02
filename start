@@ -1,2 +1,2 @@
 #!/bin/bash
-exec python primer.py
+exec run.sh
