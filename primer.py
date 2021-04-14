@@ -11,6 +11,11 @@ import auth_public as auth
 import psycopg2, psycopg2.extensions, psycopg2.extras
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo problemov s šumniki
 
+import os
+
+SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
+RELOADER = os.environ.get('BOTTLE_RELOADER', True)
+
 # odkomentiraj, če želiš sporočila o napakah
 # debug(True)
 
@@ -54,5 +59,5 @@ def dodaj_transakcijo_post():
 #conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
 #cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-# poženemo strežnik na portu 8080, glej http://localhost:8080/
-run(host='localhost', port=8080)
+# poženemo strežnik na podanih vratih, npr. http://localhost:8080/
+run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
