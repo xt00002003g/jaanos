@@ -13,11 +13,16 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo prob
 
 import os
 
+# privzete nastavitve
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
+ROOT = os.environ.get('JUPYTERHUB_SERVER_PREFIX', '/')
 
 # odkomentiraj, če želiš sporočila o napakah
 # debug(True)
+
+def rtemplate(*largs, **kwargs):
+    return template(ROOT=ROOT, *largs, **kwargs)
 
 @get('/static/<filename:path>')
 def static(filename):
@@ -25,17 +30,18 @@ def static(filename):
 
 @get('/')
 def index():
-    cur.execute("SELECT * FROM oseba ORDER BY priimek, ime")
-    return template('komitenti.html', osebe=cur)
+    #cur.execute("SELECT * FROM oseba ORDER BY priimek, ime")
+    cur = [["emšo", "ime", "priimek", "rojstvo", "ulica", "pošta"]]
+    return rtemplate('komitenti.html', osebe=cur)
 
 @get('/transakcije/:x/')
 def transakcije(x):
     cur.execute("SELECT * FROM transakcija WHERE znesek > %s ORDER BY znesek, id", [int(x)])
-    return template('transakcije.html', x=x, transakcije=cur)
+    return rtemplate('transakcije.html', x=x, transakcije=cur)
 
 @get('/dodaj_transakcijo')
 def dodaj_transakcijo():
-    return template('dodaj_transakcijo.html', znesek='', racun='', opis='', napaka=None)
+    return rtemplate('dodaj_transakcijo.html', znesek='', racun='', opis='', napaka=None)
 
 @post('/dodaj_transakcijo')
 def dodaj_transakcijo_post():
@@ -47,7 +53,7 @@ def dodaj_transakcijo_post():
                     (znesek, racun, opis))
         conn.commit()
     except Exception as ex:
-        return template('dodaj_transakcijo.html', znesek=znesek, racun=racun, opis=opis,
+        return rtemplate('dodaj_transakcijo.html', znesek=znesek, racun=racun, opis=opis,
                         napaka = 'Zgodila se je napaka: %s' % ex)
     redirect("/")
 
