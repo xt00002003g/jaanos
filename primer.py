@@ -16,7 +16,7 @@ import os
 # privzete nastavitve
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
-ROOT = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
+ROOT = os.environ.get('BOTTLE_ROOT', '/')
 
 # odkomentiraj, če želiš sporočila o napakah
 # debug(True)
