@@ -17,6 +17,7 @@ import os
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
 ROOT = os.environ.get('BOTTLE_ROOT', '/')
+PORT = os.environ.get('POSTGRES_PORT', 5432)
 
 # odkomentiraj, če želiš sporočila o napakah
 # debug(True)
@@ -30,8 +31,7 @@ def static(filename):
 
 @get('/')
 def index():
-    #cur.execute("SELECT * FROM oseba ORDER BY priimek, ime")
-    cur = [["emšo", "ime", "priimek", "rojstvo", "ulica", "pošta"]]
+    cur.execute("SELECT * FROM oseba ORDER BY priimek, ime")
     return rtemplate('komitenti.html', osebe=cur)
 
 @get('/transakcije/:x/')
@@ -61,9 +61,9 @@ def dodaj_transakcijo_post():
 # Glavni program
 
 # priklopimo se na bazo
-#conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password)
-#conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
-#cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=PORT)
+conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
+cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
 run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
