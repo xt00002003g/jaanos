@@ -17,12 +17,15 @@ import os
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
 ROOT = os.environ.get('BOTTLE_ROOT', '/')
-PORT = os.environ.get('POSTGRES_PORT', 5432)
+DB_PORT = os.environ.get('POSTGRES_PORT', 5432)
 
 # odkomentiraj, če želiš sporočila o napakah
 # debug(True)
 
 def rtemplate(*largs, **kwargs):
+    """
+    Izpis predloge s podajanjem spremenljivke ROOT z osnovnim URL-jem.
+    """
     return template(ROOT=ROOT, *largs, **kwargs)
 
 @get('/static/<filename:path>')
@@ -55,13 +58,13 @@ def dodaj_transakcijo_post():
     except Exception as ex:
         return rtemplate('dodaj_transakcijo.html', znesek=znesek, racun=racun, opis=opis,
                         napaka = 'Zgodila se je napaka: %s' % ex)
-    redirect("/")
+    redirect(ROOT)
 
 ######################################################################
 # Glavni program
 
 # priklopimo se na bazo
-conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=PORT)
+conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=DB_PORT)
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
