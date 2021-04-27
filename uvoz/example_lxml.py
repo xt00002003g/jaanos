@@ -27,6 +27,6 @@ for r in tabela[1:]:
     r[2] = int(r[2].replace(".", ""))
 
 # Zapišemo v datoteko CSV
-with open("obcine.csv", "w") as f:
+with open("obcine.csv", "w", encoding="UTF-8") as f:
     w = csv.writer(f)
     w.writerows(tabela)

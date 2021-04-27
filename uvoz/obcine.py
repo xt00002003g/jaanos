@@ -1,6 +1,5 @@
 # uvozimo ustrezne podatke za povezavo
 import auth
-auth.db = "sem2018_%s" % auth.user
 
 # uvozimo psycopg2
 import psycopg2, psycopg2.extensions, psycopg2.extras
@@ -32,7 +31,7 @@ def pobrisi_tabelo():
     conn.commit()
 
 def uvozi_podatke():
-    with open("obcine.csv") as f:
+    with open("obcine.csv", encoding="UTF-8") as f:
         rd = csv.reader(f)
         next(rd) # izpusti naslovno vrstico
         for r in rd:
