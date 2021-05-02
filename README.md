@@ -1,8 +1,10 @@
 # Primer spletne aplikacije z `bottle.py`
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jaanos/OPB-bottle/master?urlpath=proxy/8080/)
+* [![bottle.py](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jaanos/OPB-bottle/master?urlpath=proxy/8080/) Aplikacija `bottle.py`
+* [![Jupyter](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jaanos/OPB-bottle/master) Jupyter
 
-Ta repozitorij vsebuje minimalen primer spletne aplikacije z ogrodjem `bottle.py` in povezavo na podatkovno bazo PostgreSQL.
+
+Ta repozitorij vsebuje minimalen primer spletne aplikacije z ogrodjem [`bottle.py`](https://bottlepy.org/docs/dev/) in povezavo na podatkovno bazo [PostgreSQL](https://www.postgresql.org/).
 
 
 ## Aplikacija
