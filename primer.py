@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 # uvozimo bottle.py
-from bottle import *
+from bottle import get, post, run, request, template, redirect, static_file
 
 # uvozimo ustrezne podatke za povezavo
 import auth_public as auth
@@ -37,9 +37,9 @@ def index():
     cur.execute("SELECT * FROM oseba ORDER BY priimek, ime")
     return rtemplate('komitenti.html', osebe=cur)
 
-@get('/transakcije/:x/')
+@get('/transakcije/<x:int>/')
 def transakcije(x):
-    cur.execute("SELECT * FROM transakcija WHERE znesek > %s ORDER BY znesek, id", [int(x)])
+    cur.execute("SELECT * FROM transakcija WHERE znesek > %s ORDER BY znesek, id", [x])
     return rtemplate('transakcije.html', x=x, transakcije=cur)
 
 @get('/dodaj_transakcijo')
@@ -54,10 +54,13 @@ def dodaj_transakcijo_post():
     try:
         cur.execute("INSERT INTO transakcija (znesek, racun, opis) VALUES (%s, %s, %s)",
                     (znesek, racun, opis))
+        cur.execute("INSERT INTO transakcija (znesek, racun, opis) VALUES (%s, 100027, %s)",
+                    (int(znesek) * 0.1, "Provizija za " + opis))
         conn.commit()
     except Exception as ex:
+        conn.rollback()
         return rtemplate('dodaj_transakcijo.html', znesek=znesek, racun=racun, opis=opis,
-                        napaka = 'Zgodila se je napaka: %s' % ex)
+                        napaka='Zgodila se je napaka: %s' % ex)
     redirect(ROOT)
 
 ######################################################################
@@ -65,7 +68,7 @@ def dodaj_transakcijo_post():
 
 # priklopimo se na bazo
 conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=DB_PORT)
-conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
+#conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
