@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 # uvozimo bottle.py
-from bottle import get, post, run, request, template, redirect, static_file
+from bottleext import get, post, run, request, template, redirect, static_file, url
 
 # uvozimo ustrezne podatke za povezavo
 import auth_public as auth
@@ -16,17 +16,10 @@ import os
 # privzete nastavitve
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
-ROOT = os.environ.get('BOTTLE_ROOT', '/')
 DB_PORT = os.environ.get('POSTGRES_PORT', 5432)
 
 # odkomentiraj, če želiš sporočila o napakah
 # debug(True)
-
-def rtemplate(*largs, **kwargs):
-    """
-    Izpis predloge s podajanjem spremenljivke ROOT z osnovnim URL-jem.
-    """
-    return template(ROOT=ROOT, *largs, **kwargs)
 
 @get('/static/<filename:path>')
 def static(filename):
@@ -35,16 +28,16 @@ def static(filename):
 @get('/')
 def index():
     cur.execute("SELECT * FROM oseba ORDER BY priimek, ime")
-    return rtemplate('komitenti.html', osebe=cur)
+    return template('komitenti.html', osebe=cur)
 
 @get('/transakcije/<x:int>/')
 def transakcije(x):
     cur.execute("SELECT * FROM transakcija WHERE znesek > %s ORDER BY znesek, id", [x])
-    return rtemplate('transakcije.html', x=x, transakcije=cur)
+    return template('transakcije.html', x=x, transakcije=cur)
 
 @get('/dodaj_transakcijo')
 def dodaj_transakcijo():
-    return rtemplate('dodaj_transakcijo.html', znesek='', racun='', opis='', napaka=None)
+    return template('dodaj_transakcijo.html', znesek='', racun='', opis='', napaka=None)
 
 @post('/dodaj_transakcijo')
 def dodaj_transakcijo_post():
@@ -59,9 +52,9 @@ def dodaj_transakcijo_post():
         conn.commit()
     except Exception as ex:
         conn.rollback()
-        return rtemplate('dodaj_transakcijo.html', znesek=znesek, racun=racun, opis=opis,
+        return template('dodaj_transakcijo.html', znesek=znesek, racun=racun, opis=opis,
                         napaka='Zgodila se je napaka: %s' % ex)
-    redirect(ROOT)
+    redirect(url('index'))
 
 ######################################################################
 # Glavni program
@@ -72,4 +65,5 @@ conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, passwo
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
-run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
+if __name__ == "__main__":
+    run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
