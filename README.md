@@ -16,6 +16,7 @@ python primer.py
 Za delovanje je potrebno še sledeče:
 * [`auth_public.py`](auth_public.py) - podatki za prijavo na bazo
 * [`bottle.py`](bottle.py) - knjižnica za spletni strežnik
+* [`bottleext.py`](bottleext.py) - dopolnitve knjižnice `bottle.py` za lažje delo
 * [`static/`](static/) - mapa s statičnimi datotekami
 * [`views/`](views/) - mapa s predlogami
 
