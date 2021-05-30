@@ -47,8 +47,6 @@ def dodaj_transakcijo_post():
     try:
         cur.execute("INSERT INTO transakcija (znesek, racun, opis) VALUES (%s, %s, %s)",
                     (znesek, racun, opis))
-        cur.execute("INSERT INTO transakcija (znesek, racun, opis) VALUES (%s, 100027, %s)",
-                    (int(znesek) * 0.1, "Provizija za " + opis))
         conn.commit()
     except Exception as ex:
         conn.rollback()
