@@ -7,6 +7,10 @@
 Ta repozitorij vsebuje minimalen primer spletne aplikacije z ogrodjem [`bottle.py`](https://bottlepy.org/docs/dev/) in povezavo na podatkovno bazo [PostgreSQL](https://www.postgresql.org/) za potrebe predmeta [Osnove podatkovnih baz](https://github.com/jaanos/OPB).
 
 
+## ER diagram
+
+![ER diagram](banka.png)
+
 ## Aplikacija
 
 Aplikacijo zaženemo tako, da poženemo program [`primer.py`](primer.py), npr.
