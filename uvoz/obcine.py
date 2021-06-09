@@ -49,10 +49,11 @@ def uvozi_podatke():
 
 def prebivalci(stevilo):
     cur.execute("""
-        SELECT * FROM obcina
+        SELECT ime, prebivalstvo, ustanovitev FROM obcina
         WHERE prebivalstvo >= %s
     """, [stevilo])
-    return cur.fetchall()
+    for ime, prebivalstvo, ustanovitev in cur:
+        print(f"{ime} z {prebivalstvo} prebivalci, ustanovljena leta {ustanovitev}")
 
 conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password)
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor) 
